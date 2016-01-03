@@ -8,20 +8,52 @@
 
 /* Begin PBXBuildFile section */
 		2E629F491C3913E8008753C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E629F481C3913E8008753C1 /* AppDelegate.swift */; };
-		2E629F4B1C3913E8008753C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E629F4A1C3913E8008753C1 /* ViewController.swift */; };
 		2E629F4E1C3913E8008753C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F4C1C3913E8008753C1 /* Main.storyboard */; };
 		2E629F501C3913E8008753C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F4F1C3913E8008753C1 /* Assets.xcassets */; };
 		2E629F531C3913E8008753C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F511C3913E8008753C1 /* LaunchScreen.storyboard */; };
+		2E629F5B1C391423008753C1 /* BodyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E629F5A1C391423008753C1 /* BodyViewController.swift */; };
+		2E629F5D1C39142E008753C1 /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E629F5C1C39142E008753C1 /* FriendsViewController.swift */; };
+		2E629F5F1C391474008753C1 /* Body Feature in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F5E1C391474008753C1 /* Body Feature */; };
+		2E629F6E1C39156C008753C1 /* Brush-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F611C39156C008753C1 /* Brush-100.png */; };
+		2E629F6F1C39156C008753C1 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F621C39156C008753C1 /* back-white.png */; };
+		2E629F701C39156C008753C1 /* back-gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F631C39156C008753C1 /* back-gray.png */; };
+		2E629F711C39156C008753C1 /* Settings Filled-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F641C39156C008753C1 /* Settings Filled-100.png */; };
+		2E629F721C39156C008753C1 /* Synchronize-100(1).png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F651C39156C008753C1 /* Synchronize-100(1).png */; };
+		2E629F731C39156C008753C1 /* Synchronize Filled-100 (gray).png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F661C39156C008753C1 /* Synchronize Filled-100 (gray).png */; };
+		2E629F741C39156C008753C1 /* Gold-Coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F671C39156C008753C1 /* Gold-Coin.png */; };
+		2E629F751C39156C008753C1 /* Silver-Coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F681C39156C008753C1 /* Silver-Coin.png */; };
+		2E629F761C39156C008753C1 /* Dice-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F691C39156C008753C1 /* Dice-100.png */; };
+		2E629F771C39156C008753C1 /* Cancel 2 Filled-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F6A1C39156C008753C1 /* Cancel 2 Filled-100.png */; };
+		2E629F781C39156C008753C1 /* Download-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F6B1C39156C008753C1 /* Download-100.png */; };
+		2E629F791C39156C008753C1 /* Delete Sign Filled-100(1).png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F6C1C39156C008753C1 /* Delete Sign Filled-100(1).png */; };
+		2E629F7A1C39156C008753C1 /* Delete Sign Filled-100(gray).png in Resources */ = {isa = PBXBuildFile; fileRef = 2E629F6D1C39156C008753C1 /* Delete Sign Filled-100(gray).png */; };
+		2E629F7C1C3915EC008753C1 /* CoreSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E629F7B1C3915EC008753C1 /* CoreSwift.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2E629F451C3913E8008753C1 /* Word World Friends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Word World Friends.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E629F481C3913E8008753C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2E629F4A1C3913E8008753C1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2E629F4D1C3913E8008753C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2E629F4F1C3913E8008753C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E629F521C3913E8008753C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E629F541C3913E8008753C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E629F5A1C391423008753C1 /* BodyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyViewController.swift; sourceTree = "<group>"; };
+		2E629F5C1C39142E008753C1 /* FriendsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = "<group>"; };
+		2E629F5E1C391474008753C1 /* Body Feature */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Body Feature"; sourceTree = "<group>"; };
+		2E629F611C39156C008753C1 /* Brush-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Brush-100.png"; sourceTree = "<group>"; };
+		2E629F621C39156C008753C1 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-white.png"; sourceTree = "<group>"; };
+		2E629F631C39156C008753C1 /* back-gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-gray.png"; sourceTree = "<group>"; };
+		2E629F641C39156C008753C1 /* Settings Filled-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings Filled-100.png"; sourceTree = "<group>"; };
+		2E629F651C39156C008753C1 /* Synchronize-100(1).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Synchronize-100(1).png"; sourceTree = "<group>"; };
+		2E629F661C39156C008753C1 /* Synchronize Filled-100 (gray).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Synchronize Filled-100 (gray).png"; sourceTree = "<group>"; };
+		2E629F671C39156C008753C1 /* Gold-Coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gold-Coin.png"; sourceTree = "<group>"; };
+		2E629F681C39156C008753C1 /* Silver-Coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Silver-Coin.png"; sourceTree = "<group>"; };
+		2E629F691C39156C008753C1 /* Dice-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dice-100.png"; sourceTree = "<group>"; };
+		2E629F6A1C39156C008753C1 /* Cancel 2 Filled-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cancel 2 Filled-100.png"; sourceTree = "<group>"; };
+		2E629F6B1C39156C008753C1 /* Download-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Download-100.png"; sourceTree = "<group>"; };
+		2E629F6C1C39156C008753C1 /* Delete Sign Filled-100(1).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Delete Sign Filled-100(1).png"; sourceTree = "<group>"; };
+		2E629F6D1C39156C008753C1 /* Delete Sign Filled-100(gray).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Delete Sign Filled-100(gray).png"; sourceTree = "<group>"; };
+		2E629F7B1C3915EC008753C1 /* CoreSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreSwift.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +86,38 @@
 		2E629F471C3913E8008753C1 /* Word World Friends */ = {
 			isa = PBXGroup;
 			children = (
-				2E629F481C3913E8008753C1 /* AppDelegate.swift */,
-				2E629F4A1C3913E8008753C1 /* ViewController.swift */,
-				2E629F4C1C3913E8008753C1 /* Main.storyboard */,
-				2E629F4F1C3913E8008753C1 /* Assets.xcassets */,
-				2E629F511C3913E8008753C1 /* LaunchScreen.storyboard */,
+				2E629F601C39155D008753C1 /* original icons */,
+				2E629F5E1C391474008753C1 /* Body Feature */,
 				2E629F541C3913E8008753C1 /* Info.plist */,
+				2E629F4C1C3913E8008753C1 /* Main.storyboard */,
+				2E629F511C3913E8008753C1 /* LaunchScreen.storyboard */,
+				2E629F4F1C3913E8008753C1 /* Assets.xcassets */,
+				2E629F7B1C3915EC008753C1 /* CoreSwift.swift */,
+				2E629F481C3913E8008753C1 /* AppDelegate.swift */,
+				2E629F5A1C391423008753C1 /* BodyViewController.swift */,
+				2E629F5C1C39142E008753C1 /* FriendsViewController.swift */,
 			);
 			path = "Word World Friends";
+			sourceTree = "<group>";
+		};
+		2E629F601C39155D008753C1 /* original icons */ = {
+			isa = PBXGroup;
+			children = (
+				2E629F611C39156C008753C1 /* Brush-100.png */,
+				2E629F621C39156C008753C1 /* back-white.png */,
+				2E629F631C39156C008753C1 /* back-gray.png */,
+				2E629F641C39156C008753C1 /* Settings Filled-100.png */,
+				2E629F651C39156C008753C1 /* Synchronize-100(1).png */,
+				2E629F661C39156C008753C1 /* Synchronize Filled-100 (gray).png */,
+				2E629F671C39156C008753C1 /* Gold-Coin.png */,
+				2E629F681C39156C008753C1 /* Silver-Coin.png */,
+				2E629F691C39156C008753C1 /* Dice-100.png */,
+				2E629F6A1C39156C008753C1 /* Cancel 2 Filled-100.png */,
+				2E629F6B1C39156C008753C1 /* Download-100.png */,
+				2E629F6C1C39156C008753C1 /* Delete Sign Filled-100(1).png */,
+				2E629F6D1C39156C008753C1 /* Delete Sign Filled-100(gray).png */,
+			);
+			name = "original icons";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,6 +152,7 @@
 				TargetAttributes = {
 					2E629F441C3913E8008753C1 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = CT648UDKHF;
 					};
 				};
 			};
@@ -122,9 +179,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E629F721C39156C008753C1 /* Synchronize-100(1).png in Resources */,
+				2E629F701C39156C008753C1 /* back-gray.png in Resources */,
+				2E629F771C39156C008753C1 /* Cancel 2 Filled-100.png in Resources */,
+				2E629F711C39156C008753C1 /* Settings Filled-100.png in Resources */,
+				2E629F791C39156C008753C1 /* Delete Sign Filled-100(1).png in Resources */,
+				2E629F6F1C39156C008753C1 /* back-white.png in Resources */,
 				2E629F531C3913E8008753C1 /* LaunchScreen.storyboard in Resources */,
 				2E629F501C3913E8008753C1 /* Assets.xcassets in Resources */,
+				2E629F731C39156C008753C1 /* Synchronize Filled-100 (gray).png in Resources */,
+				2E629F7A1C39156C008753C1 /* Delete Sign Filled-100(gray).png in Resources */,
+				2E629F6E1C39156C008753C1 /* Brush-100.png in Resources */,
+				2E629F761C39156C008753C1 /* Dice-100.png in Resources */,
+				2E629F5F1C391474008753C1 /* Body Feature in Resources */,
+				2E629F751C39156C008753C1 /* Silver-Coin.png in Resources */,
 				2E629F4E1C3913E8008753C1 /* Main.storyboard in Resources */,
+				2E629F781C39156C008753C1 /* Download-100.png in Resources */,
+				2E629F741C39156C008753C1 /* Gold-Coin.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +206,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E629F4B1C3913E8008753C1 /* ViewController.swift in Sources */,
+				2E629F7C1C3915EC008753C1 /* CoreSwift.swift in Sources */,
+				2E629F5B1C391423008753C1 /* BodyViewController.swift in Sources */,
+				2E629F5D1C39142E008753C1 /* FriendsViewController.swift in Sources */,
 				2E629F491C3913E8008753C1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,9 +322,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Word World Friends/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.heartatale.Word-World-Friends";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.heartatale.word-world.friends";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -260,9 +335,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Word World Friends/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.heartatale.Word-World-Friends";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.heartatale.word-world.friends";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -286,6 +363,7 @@
 				2E629F591C3913E8008753C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
