@@ -12,13 +12,13 @@ import UIKit.UIGestureRecognizerSubclass
 //MARK: - Functions
 
 ///perform the closure function after a given delay
-func delay(delay: Double, closure: ()->()) {
-    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-    dispatch_after(time, dispatch_get_main_queue(), closure)
+func delay(_ delay: Double, closure: @escaping ()->()) {
+    let time = DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+    DispatchQueue.main.asyncAfter(deadline: time, execute: closure)
 }
 
 ///play a CATransition for a UIView
-func playTransitionForView(view: UIView, duration: Double, transition transitionName: String, subtype: String? = nil, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)) {
+func playTransitionForView(_ view: UIView, duration: Double, transition transitionName: String, subtype: String? = nil, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)) {
     let transition = CATransition()
     transition.duration = duration
     transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
@@ -36,17 +36,17 @@ func playTransitionForView(view: UIView, duration: Double, transition transition
     
     transition.subtype = subtype
     transition.timingFunction = timingFunction
-    view.layer.addAnimation(transition, forKey: nil)
+    view.layer.add(transition, forKey: nil)
 }
 
 ///dimiss a stack of View Controllers until a desired controler is found
-func dismissController(controller: UIViewController, untilMatch controllerCheck: (UIViewController) -> Bool) {
+func dismissController(_ controller: UIViewController, untilMatch controllerCheck: @escaping (UIViewController) -> Bool) {
     if controllerCheck(controller) {
         return //we made it to our destination
     }
     
     let superController = controller.presentingViewController
-    controller.dismissViewControllerAnimated(false, completion: {
+    controller.dismiss(animated: false, completion: {
         if let superController = superController {
             dismissController(superController, untilMatch: controllerCheck)
         }
@@ -54,7 +54,7 @@ func dismissController(controller: UIViewController, untilMatch controllerCheck:
 }
 
 ///get the top most view controller of the current Application
-func getTopController(application: UIApplicationDelegate) -> UIViewController? {
+func getTopController(_ application: UIApplicationDelegate) -> UIViewController? {
     //find the top controller
     var topController: UIViewController?
     
@@ -69,18 +69,18 @@ func getTopController(application: UIApplicationDelegate) -> UIViewController? {
 }
 
 ///sorts any [UIView]! by view.tag
-func sortOutletCollectionByTag<T : UIView>(inout collection: [T]!) {
-    collection = (collection as NSArray).sortedArrayUsingDescriptors([NSSortDescriptor(key: "tag", ascending: true)]) as! [T]
+func sortOutletCollectionByTag<T : UIView>(_ collection: inout [T]!) {
+    collection = (collection as NSArray).sortedArray(using: [NSSortDescriptor(key: "tag", ascending: true)]) as! [T]
 }
 
 
 ///animates a back and forth shake
-func shakeView(view: UIView) {
+func shakeView(_ view: UIView) {
     let animations : [CGFloat] = [20.0, -20.0, 10.0, -10.0, 3.0, -3.0, 0]
     for i in 0 ..< animations.count {
-        let frameOrigin = CGPointMake(view.frame.origin.x + animations[i], view.frame.origin.y)
+        let frameOrigin = CGPoint(x: view.frame.origin.x + animations[i], y: view.frame.origin.y)
         
-        UIView.animateWithDuration(0.1, delay: NSTimeInterval(0.1 * Double(i)), options: [], animations: {
+        UIView.animate(withDuration: 0.1, delay: TimeInterval(0.1 * Double(i)), options: [], animations: {
             view.frame.origin = frameOrigin
             }, completion: nil)
     }
@@ -88,12 +88,12 @@ func shakeView(view: UIView) {
 
 
 ///converts a String dictionary to a String array
-func dictToArray(dict: [String : String]) -> [String] {
+func dictToArray(_ dict: [String : String]) -> [String] {
     var array: [String] = []
     
     for item in dict {
-        let first = item.0.stringByReplacingOccurrencesOfString("~", withString: "|(#)|", options: [], range: nil)
-        let second = item.1.stringByReplacingOccurrencesOfString("~", withString: "|(#)|", options: [], range: nil)
+        let first = item.0.replacingOccurrences(of: "~", with: "|(#)|", options: [], range: nil)
+        let second = item.1.replacingOccurrences(of: "~", with: "|(#)|", options: [], range: nil)
         let combined = "\(first)~\(second)"
         array.append(combined)
     }
@@ -102,13 +102,13 @@ func dictToArray(dict: [String : String]) -> [String] {
 }
 
 ///converts an array created by the dictToArray: function to the original dictionary
-func arrayToDict(array: [String]) -> [String : String] {
+func arrayToDict(_ array: [String]) -> [String : String] {
     var dict: [String : String] = [:]
     
     for item in array {
-        let splits = item.componentsSeparatedByString("~")
-        let first = splits[0].stringByReplacingOccurrencesOfString("|(#)|", withString: "~", options: [], range: nil)
-        let second = splits[1].stringByReplacingOccurrencesOfString("|(#)|", withString: "~", options: [], range: nil)
+        let splits = item.components(separatedBy: "~")
+        let first = splits[0].replacingOccurrences(of: "|(#)|", with: "~", options: [], range: nil)
+        let second = splits[1].replacingOccurrences(of: "|(#)|", with: "~", options: [], range: nil)
         dict.updateValue(second, forKey: first)
     }
     
@@ -117,54 +117,54 @@ func arrayToDict(array: [String]) -> [String : String] {
 
 
 ///short-form function to run a block synchronously on the main queue
-func sync(closure: () -> ()) {
-    dispatch_sync(dispatch_get_main_queue(), closure)
+func sync(_ closure: () -> ()) {
+    DispatchQueue.main.sync(execute: closure)
 }
 
 ///short-form function to run a block asynchronously on the main queue
-func async(closure: () -> ()) {
-    dispatch_async(dispatch_get_main_queue(), closure)
+func async(_ closure: @escaping () -> ()) {
+    DispatchQueue.main.async(execute: closure)
 }
 
 
 ///open to this app's iOS Settings
 func openSettings() {
-    UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+    UIApplication.shared.openURL(URL(string:UIApplicationOpenSettingsURLString)!)
 }
 
 
 ///returns trus if the current device is an iPad
 func iPad() -> Bool {
-    return UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Pad
+    return UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
 }
 
 ///returns trus if the current device is an iPhone 4S
 func is4S() -> Bool {
-    return UIScreen.mainScreen().bounds.height == 480.0
+    return UIScreen.main.bounds.height == 480.0
 }
 
 
 ///a more succinct function call to post a notification
-func postNotification(name: String, object: AnyObject?) {
-    NSNotificationCenter.defaultCenter().postNotificationName(name, object: object, userInfo: nil)
+func postNotification(_ name: String, object: AnyObject?) {
+    NotificationCenter.default.post(name: Notification.Name(rawValue: name), object: object, userInfo: nil)
 }
 
 ///Asynchonrously ownsamples the image view's image to match the view's size
-func downsampleImageInView(imageView: UIImageView) {
+func downsampleImageInView(_ imageView: UIImageView) {
     async() {
         let newSize = imageView.frame.size
-        let screenScale = UIScreen.mainScreen().scale
-        let scaleSize = CGSizeMake(newSize.width * screenScale, newSize.height * screenScale)
+        let screenScale = UIScreen.main.scale
+        let scaleSize = CGSize(width: newSize.width * screenScale, height: newSize.height * screenScale)
         
-        if let original = imageView.image where original.size.width > scaleSize.width {
+        if let original = imageView.image, original.size.width > scaleSize.width {
             UIGraphicsBeginImageContext(scaleSize)
             let context = UIGraphicsGetCurrentContext()
             //CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
-            CGContextSetShouldAntialias(context, true)
-            original.drawInRect(CGRect(origin: CGPointZero, size: scaleSize))
+            context?.setShouldAntialias(true)
+            original.draw(in: CGRect(origin: CGPoint.zero, size: scaleSize))
             let newImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 imageView.image = newImage
             })
         }
@@ -172,42 +172,21 @@ func downsampleImageInView(imageView: UIImageView) {
 }
 
 ///Converts a URL to a CSV into an array of all of the lines in the CSV.
-func csvToArray(url: NSURL) -> [String] {
-    let string = try! String(contentsOfURL: url, encoding: NSUTF8StringEncoding)
-    return string.componentsSeparatedByString("\r\n")
-}
-
-
-///Crops an image to a circle (if square) or an oval (if rectangular)
-func cropImageToCircle(image: UIImage) -> UIImage {
-    UIGraphicsBeginImageContext(image.size)
-    let context = UIGraphicsGetCurrentContext()
-    
-    let radius = image.size.width / 2
-    let imageCenter = CGPointMake(image.size.width / 2, image.size.height / 2)
-    CGContextBeginPath(context)
-    CGContextAddArc(context, imageCenter.x, imageCenter.y, radius, 0, CGFloat(2*M_PI), 0)
-    CGContextClosePath(context)
-    CGContextClip(context)
-    
-    CGContextScaleCTM(context, image.scale, image.scale)
-    image.drawInRect(CGRect(origin: CGPointZero, size: image.size))
-    
-    let cropped = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return cropped
+func csvToArray(_ url: URL) -> [String] {
+    let string = try! String(contentsOf: url, encoding: String.Encoding.utf8)
+    return string.components(separatedBy: "\r\n")
 }
 
 ///Determines the height required to display the text in the given label
-func heightForText(text: String, width: CGFloat, font: UIFont) -> CGFloat {
+func heightForText(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
     let context = NSStringDrawingContext()
-    let size = CGSizeMake(width, CGFloat.max)
-    let rect = text.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: context)
+    let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+    let rect = text.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: context)
     return rect.height
 }
 
 ///changes the color of all HTTP links to the specified color
-func attributedStringWithHighlightedLinks(string: String, linkColor: UIColor) -> NSAttributedString {
+func attributedStringWithHighlightedLinks(_ string: String, linkColor: UIColor) -> NSAttributedString {
     
     let attributed = NSMutableAttributedString(string: string)
     for (_, linkRange) in linksInText(string) {
@@ -218,15 +197,15 @@ func attributedStringWithHighlightedLinks(string: String, linkColor: UIColor) ->
 }
 
 ///returns a list of all HTTP links in the given string
-func linksInText(string: String) -> [(text: String, range: NSRange)] {
+func linksInText(_ string: String) -> [(text: String, range: NSRange)] {
     
     var text = string as NSString
     var links: [(text: String, range: NSRange)] = []
     
-    while text.containsString("http://") || text.containsString("www.") || text.containsString("https://") {
-        var idRange = text.rangeOfString("http://")
-        if idRange.location == NSNotFound { idRange = text.rangeOfString("https://") }
-        if idRange.location == NSNotFound { idRange = text.rangeOfString("www.") }
+    while text.contains("http://") || text.contains("www.") || text.contains("https://") {
+        var idRange = text.range(of: "http://")
+        if idRange.location == NSNotFound { idRange = text.range(of: "https://") }
+        if idRange.location == NSNotFound { idRange = text.range(of: "www.") }
         
         if idRange.location != NSNotFound {
             //find entire word that contains link ID
@@ -241,12 +220,12 @@ func linksInText(string: String) -> [(text: String, range: NSRange)] {
             }
             
             while !nextIsWhitespace() && (wordEnd != text.length) {
-                wordEnd++;
+                wordEnd += 1;
             }
             
             let linkRange = NSMakeRange(wordStart, wordEnd - wordStart)
-            let link = text.substringWithRange(linkRange)
-            text = text.stringByReplacingCharactersInRange(linkRange, withString: link.uppercaseString)
+            let link = text.substring(with: linkRange)
+            text = text.replacingCharacters(in: linkRange, with: link.uppercased()) as NSString
             links.append(text: link, range: linkRange)
         }
     }
@@ -255,11 +234,11 @@ func linksInText(string: String) -> [(text: String, range: NSRange)] {
 }
 
 ///converts "http://www.google.com/search/page/saiojdfghadlsifuhlaisdf" to "google.com"
-func websiteForLink(string: String) -> String {
-    var stripped = (string as NSString).stringByReplacingOccurrencesOfString("http://", withString: "")
-    stripped = (stripped as NSString).stringByReplacingOccurrencesOfString("https://", withString: "")
-    stripped = (stripped as NSString).stringByReplacingOccurrencesOfString("www.", withString: "")
-    return stripped.componentsSeparatedByString("/")[0]
+func websiteForLink(_ string: String) -> String {
+    var stripped = (string as NSString).replacingOccurrences(of: "http://", with: "")
+    stripped = (stripped as NSString).replacingOccurrences(of: "https://", with: "")
+    stripped = (stripped as NSString).replacingOccurrences(of: "www.", with: "")
+    return stripped.components(separatedBy: "/")[0]
 }
 
 //MARK: - Classes
@@ -267,103 +246,21 @@ func websiteForLink(string: String) -> String {
 ///A touch gesture recognizer that sends events on both .Began (down) and .Ended (up)
 class UITouchGestureRecognizer : UITapGestureRecognizer {
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent) {
-        super.touchesBegan(touches, withEvent: event)
-        self.state = .Began
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesBegan(touches, with: event)
+        self.state = .began
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent) {
-        super.touchesMoved(touches, withEvent: event)
-        self.state = .Began
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesMoved(touches, with: event)
+        self.state = .began
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent) {
-        super.touchesEnded(touches, withEvent: event)
-        self.state = .Ended
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesEnded(touches, with: event)
+        self.state = .ended
     }
     
-}
-
-///A basic class to manage Location access
-class LocationManager : NSObject, CLLocationManagerDelegate {
-    
-    var waitingForAuthorization: [(completion: (CLLocation) -> (), failure: LocationFailureReason -> ())] = []
-    var waitingForUpdate: [(completion: (CLLocation) -> (), failure: LocationFailureReason -> ())] = []
-    var manager = CLLocationManager()
-    
-    ///Manager must be kept as a strong reference at the class-level.
-    init(accuracy: CLLocationAccuracy) {
-        super.init()
-        manager.delegate = self
-        manager.desiredAccuracy = accuracy
-    }
-    
-    func getCurrentLocation(completion: (CLLocation) -> (), failure: LocationFailureReason -> () ) {
-        let auth = CLLocationManager.authorizationStatus()
-        if auth == .Restricted || auth == .Denied {
-            failure(.PermissionsDenied)
-            return
-        }
-        
-        if auth == .NotDetermined {
-            waitingForAuthorization.append(completion: completion, failure: failure)
-            manager.requestWhenInUseAuthorization()
-            return
-        }
-        
-        updateLocationIfEnabled(completion, failure: failure)
-        
-    }
-    
-    func getCurrentLocation(completion: (CLLocation) -> ()) {
-        getCurrentLocation(completion, failure: { error in })
-    }
-    
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        for (completion, failure) in waitingForAuthorization {
-            if status == .AuthorizedWhenInUse {
-                updateLocationIfEnabled(completion, failure: failure)
-            }
-            else {
-                failure(.PermissionsDenied)
-            }
-        }
-        waitingForAuthorization = []
-    }
-    
-    private func updateLocationIfEnabled(completion: (CLLocation) -> (), failure: LocationFailureReason -> ()) {
-        if !CLLocationManager.locationServicesEnabled() {
-            failure(.LocationServicesDisabled)
-            return
-        }
-        
-        waitingForUpdate.append(completion: completion, failure: failure)
-        manager.startUpdatingLocation()
-    }
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations[0]
-        for (completion, _) in waitingForUpdate {
-            completion(location)
-        }
-        waitingForUpdate = []
-        manager.stopUpdatingLocation()
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        for (_, failure) in waitingForUpdate {
-            failure(.Error(error))
-        }
-        waitingForUpdate = []
-        manager.stopUpdatingLocation()
-    }
-    
-}
-
-enum LocationFailureReason {
-    case PermissionsDenied
-    case LocationServicesDisabled
-    case Error(NSError)
 }
 
 ///Standard Stack data structure
@@ -372,7 +269,7 @@ struct Stack<T> {
     
     var array : [T] = []
     
-    mutating func push(push: T) {
+    mutating func push(_ push: T) {
         array.append(push)
     }
     
@@ -408,12 +305,12 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func pushDelegate(delegate: StackableTableDelegate, hasBeenUpdatedToNewLoadFormat: Bool) {
-        pushDelegate(delegate, isBack: false, atOffset: CGPointZero)
+    func pushDelegate(_ delegate: StackableTableDelegate, hasBeenUpdatedToNewLoadFormat: Bool) {
+        pushDelegate(delegate, isBack: false, atOffset: CGPoint.zero)
     }
     
-    private func pushDelegate(delegate: StackableTableDelegate, isBack: Bool, atOffset offset: CGPoint?) {
-        if let currentDelegate = tableView.delegate as? StackableTableDelegate where !isBack {
+    fileprivate func pushDelegate(_ delegate: StackableTableDelegate, isBack: Bool, atOffset offset: CGPoint?) {
+        if let currentDelegate = tableView.delegate as? StackableTableDelegate, !isBack {
             let delegateInfo = (delegate: currentDelegate, contentOffset: self.tableView.contentOffset)
             delegateStack.push(delegateInfo)
         }
@@ -426,7 +323,7 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
         //but only if the content size hasn't gotten smaller than the previous offset
         let contentHeight = tableView.contentSize.height + tableView.contentInset.top + tableView.contentInset.bottom
         if (offset?.y ?? 0) <= contentHeight - tableView.frame.height {
-            tableView.contentOffset = offset ?? CGPointZero
+            tableView.contentOffset = offset ?? CGPoint.zero
         }
         
         unhighlightAllCells()
@@ -436,30 +333,30 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
         playTransitionForView(tableView, duration: 0.4, transition: kCATransitionPush, subtype: subtype, timingFunction: timingFunction)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("numberOfRowsInSection must be implemented by the subclass")
         return 0
     }
     
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("cellForRowAtIndexPath must be implemented by the subclass")
         return UITableViewCell()
     }
     
-    func processTouchInTableView(touch: CGPoint, state: UIGestureRecognizerState) {
+    func processTouchInTableView(_ touch: CGPoint, state: UIGestureRecognizerState) {
         for cell in tableView.visibleCells {
             let delegate = tableView.delegate as? StackableTableDelegate
             
-            if let index = tableView.indexPathForCell(cell) {
+            if let index = tableView.indexPath(for: cell) {
                 if cell.frame.contains(touch) {
                     
                     //ignore touch is commanded by the delagate
                     if delegate?.shouldIgnoreTouch?(touch, inCell: cell) != true {
                         
-                        if state == .Ended {
+                        if state == .ended {
                             if let processSelectedCellWithTouch = delegate?.processSelectedCellWithTouch {
-                                let touchInView = cell.convertPoint(touch, fromView: tableView)
+                                let touchInView = cell.convert(touch, from: tableView)
                                 processSelectedCellWithTouch(index, touchInView)
                             } else {
                                 delegate?.processSelectedCell(index)
@@ -488,9 +385,9 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
     func unhighlightAllCells() {
         guard let delegate = tableView.delegate as? StackableTableDelegate else { return }
         for cell in tableView.visibleCells {
-            let indexPath = tableView.indexPathForCell(cell)!
+            let indexPath = tableView.indexPath(for: cell)!
             if delegate.canHighlightCell(indexPath) {
-                delegate.animateSelection(cell, indexPath: tableView.indexPathForCell(cell)!, selected: false)
+                delegate.animateSelection(cell, indexPath: tableView.indexPath(for: cell)!, selected: false)
             }
         }
     }
@@ -499,25 +396,25 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
 
 @objc protocol StackableTableDelegate : UITableViewDelegate, UITableViewDataSource {
     
-    func processSelectedCell(index: NSIndexPath)
-    optional func processSelectedCellWithTouch(index: NSIndexPath, _ touchLocationInCell: CGPoint)
-    func canHighlightCell(index: NSIndexPath) -> Bool
-    func animateSelection(cell: UITableViewCell, indexPath: NSIndexPath, selected: Bool)
+    func processSelectedCell(_ index: IndexPath)
+    @objc optional func processSelectedCellWithTouch(_ index: IndexPath, _ touchLocationInCell: CGPoint)
+    func canHighlightCell(_ index: IndexPath) -> Bool
+    func animateSelection(_ cell: UITableViewCell, indexPath: IndexPath, selected: Bool)
     func loadCachedData()
     func loadData()
     func isFirstLoad() -> Bool
-    optional func shouldIgnoreTouch(location: CGPoint, inCell: UITableViewCell) -> Bool
-    optional func getTitle() -> String
-    optional func getBackButtonImage() -> UIImage
-    optional func scrollViewDidScroll(scrollView: UIScrollView)
+    @objc optional func shouldIgnoreTouch(_ location: CGPoint, inCell: UITableViewCell) -> Bool
+    @objc optional func getTitle() -> String
+    @objc optional func getBackButtonImage() -> UIImage
+    @objc optional func scrollViewDidScroll(_ scrollView: UIScrollView)
     
 }
 
 ///This class fixes the weird bug where iPad Table View Cells always default to a white background
 class TransparentTableView : UITableView {
     
-    override func dequeueReusableCellWithIdentifier(identifier: String) -> UITableViewCell? {
-        let cell = super.dequeueReusableCellWithIdentifier(identifier)
+    override func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
+        let cell = super.dequeueReusableCell(withIdentifier: identifier)
         cell?.backgroundColor = cell?.backgroundColor
         return cell
     }
@@ -551,12 +448,12 @@ extension Int {
 
 extension NSObject {
     ///Short-hand function to register a notification observer
-    func observeNotification(name: String, selector: Selector) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: name, object: nil)
+    func observeNotification(_ name: String, selector: Selector) {
+        NotificationCenter.default.addObserver(self, selector: selector, name: NSNotification.Name(rawValue: name), object: nil)
     }
 }
 
-extension NSDate {
+extension Date {
     ///converts to a "10 seconds ago" / "1 day ago" syntax
     func agoString() -> String {
         let deltaTime = -self.timeIntervalSinceNow
@@ -611,7 +508,7 @@ extension NSDate {
             }
         }
         
-        let dateString = NSDateFormatter.localizedStringFromDate(self, dateStyle: .MediumStyle, timeStyle: .NoStyle)
+        let dateString = DateFormatter.localizedString(from: self, dateStyle: .medium, timeStyle: .none)
         return "on \(dateString)"
         
     }
@@ -632,8 +529,8 @@ extension UITableViewCell {
 
 extension UIView {
     
-    static func animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping damping: CGFloat, animations: () -> ()) {
-        UIView.animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
+    static func animateWithDuration(_ duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping damping: CGFloat, animations: @escaping () -> ()) {
+        UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
     }
     
 }
@@ -645,11 +542,11 @@ extension String {
     }
     
     func asDouble() -> Double? {
-        return NSNumberFormatter().numberFromString(self)?.doubleValue
+        return NumberFormatter().number(from: self)?.doubleValue
     }
     
     func percentStringAsDouble() -> Double? {
-        if let displayedNumber = (self as NSString).substringToIndex(self.length - 1).asDouble() {
+        if let displayedNumber = (self as NSString).substring(to: self.length - 1).asDouble() {
             return displayedNumber / 100.0
         }
         return nil
@@ -662,11 +559,11 @@ extension String {
         //http://www.fileformat.info/info/unicode/char/00a0/index.htm
     }
     
-    mutating func prepareForURL(isFullURL isFullURL: Bool = false) {
+    mutating func prepareForURL(isFullURL: Bool = false) {
         self = self.preparedForURL(isFullURL: isFullURL)
     }
     
-    func preparedForURL(isFullURL isFullURL: Bool = false) -> String {
+    func preparedForURL(isFullURL: Bool = false) -> String {
         var specialCharacters = [
             "?" : "%3F",
             "&" : "%26",
@@ -684,7 +581,7 @@ extension String {
         
         var currentString = self
         for (special, replace) in specialCharacters {
-            currentString = currentString.stringByReplacingOccurrencesOfString(special, withString: replace)
+            currentString = currentString.replacingOccurrences(of: special, with: replace)
         }
         return currentString
     }
@@ -693,29 +590,29 @@ extension String {
 
 extension NSString {
     
-    func stringAtIndex(index: Int) -> String {
-        let char = self.characterAtIndex(index)
-        return "\(Character(UnicodeScalar(char)))"
+    func stringAtIndex(_ index: Int) -> String {
+        let char = self.character(at: index)
+        return "\(Character(UnicodeScalar(char)!))"
     }
     
-    func countOccurancesOfString(string: String) -> Int {
-        let strCount = self.length - self.stringByReplacingOccurrencesOfString(string, withString: "").length
+    func countOccurancesOfString(_ string: String) -> Int {
+        let strCount = self.length - self.replacingOccurrences(of: string, with: "").length
         return strCount / string.length
     }
     
 }
 
-extension NSBundle {
+extension Bundle {
     
     static var applicationVersionNumber: String {
-        if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             return version
         }
         return "Version Number Not Available"
     }
     
     static var applicationBuildNumber: String {
-        if let build = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String {
+        if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             return build
         }
         return "Build Number Not Available"

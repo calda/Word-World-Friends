@@ -18,45 +18,45 @@ class FriendsViewController : UIViewController, UICollectionViewDataSource, UICo
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateFriends", name: WWUpdateFriendsNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FriendsViewController.updateFriends), name: NSNotification.Name(rawValue: WWUpdateFriendsNotification), object: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("body", forIndexPath: indexPath) as! FriendCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "body", for: indexPath) as! FriendCell
         cell.decorate(indexPath)
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height = collectionView.frame.height
         let width = height * 0.53
         return CGSize(width: width, height: height)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsZero
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.zero
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0.0
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let bodyEditController = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("bodyEdit") as! BodyViewController
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let bodyEditController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "bodyEdit") as! BodyViewController
         bodyEditController.prepareEditor(color: friendColorForIndexPath(indexPath), friend: WWFriendsSettingsPaths[indexPath.item])
-        self.presentViewController(bodyEditController, animated: true, completion: nil)
+        self.present(bodyEditController, animated: true, completion: nil)
     }
     
     func updateFriends() {
         collectionView.reloadData()
     }
     
-    @IBAction func dismiss(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismiss(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -66,9 +66,9 @@ class FriendCell : UICollectionViewCell {
     @IBOutlet weak var colorBackground: UIView!
     @IBOutlet weak var text: UILabel!
     
-    func decorate(index: NSIndexPath) {
+    func decorate(_ index: IndexPath) {
         
-        WWFriendsSize = CGSizeMake(image.frame.width * UIScreen.mainScreen().scale, image.frame.height * UIScreen.mainScreen().scale)
+        WWFriendsSize = CGSize(width: image.frame.width * UIScreen.main.scale, height: image.frame.height * UIScreen.main.scale)
         
         let title = (index.item == 0 ? "You" : "Friend \(index.item)")
         text.text = title
@@ -77,14 +77,14 @@ class FriendCell : UICollectionViewCell {
         colorBackground.backgroundColor = color
         
         //load friend image if settings path exists
-        let userData = NSUserDefaults.standardUserDefaults()
-        if userData.valueForKey(WWFriendsSettingsPaths[index.item]) != nil {
+        let userData = UserDefaults.standard
+        if userData.value(forKey: WWFriendsSettingsPaths[index.item]) != nil {
             
-            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
             let documentsPath = paths[0]
-            let savePath = (documentsPath as NSString).stringByAppendingPathComponent("\(WWFriendsSettingsPaths[index.item]).png")
+            let savePath = (documentsPath as NSString).appendingPathComponent("\(WWFriendsSettingsPaths[index.item]).png")
             
-            let data = NSData(contentsOfFile: savePath)
+            let data = try? Data(contentsOf: URL(fileURLWithPath: savePath))
             if let data = data {
                 let image = UIImage(data: data)
                 self.image.image = image
@@ -125,7 +125,7 @@ extension UIColor {
     
 }
 
-func friendColorForIndexPath(indexPath: NSIndexPath) -> UIColor {
+func friendColorForIndexPath(_ indexPath: IndexPath) -> UIColor {
     let index = indexPath.item
     
     var hue = CGFloat(202.0 / 360.0)
