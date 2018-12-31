@@ -51,7 +51,7 @@ class FriendsViewController : UIViewController, UICollectionViewDataSource, UICo
         self.present(bodyEditController, animated: true, completion: nil)
     }
     
-    func updateFriends() {
+    @objc func updateFriends() {
         collectionView.reloadData()
     }
     

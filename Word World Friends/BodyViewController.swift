@@ -116,7 +116,7 @@ class BodyViewController : UIViewController {
         classDelegate = ClassCollectionDelegate(controller: self)
         classCollection.delegate = classDelegate
         classCollection.dataSource = classDelegate
-        classConstraint.constant = (classCollection.frame.width + 100)
+        classConstraint.constant = (classCollection.frame.width + 350)
         self.view.layoutIfNeeded()
         NotificationCenter.default.addObserver(self, selector: #selector(BodyViewController.closeClassCollection), name: NSNotification.Name(rawValue: WWCloseClassCollectionNotification), object: nil)
         
@@ -127,7 +127,7 @@ class BodyViewController : UIViewController {
         let buttonsToTint = [colorBack, colorDice, colorDownload]
         for button in buttonsToTint {
             let tintable = button?.imageView!.image!.withRenderingMode(.alwaysTemplate)
-            button?.setImage(tintable, for: UIControlState())
+            button?.setImage(tintable, for: .normal)
             button?.imageView!.tintColor = themedColor.darken()
         }
         
@@ -173,19 +173,19 @@ class BodyViewController : UIViewController {
         //save outfit data if necessary
         if mustSaveChanges {
             //present saving alert
-            let saveAlert = UIAlertController(title: "Saving your Friend", message: "This will only take a second...", preferredStyle: UIAlertControllerStyle.alert)
+            let saveAlert = UIAlertController(title: "Saving your Friend", message: "This will only take a second...", preferredStyle: .alert)
             self.present(saveAlert, animated: true, completion: {
                 
                 //finish saving
                 userData.setValue(self.outfitMap, forKey: self.currentFriend)
                 
                 let bodyImage = self.createImageOfBody(resize: true)
-                let imageData = UIImagePNGRepresentation(bodyImage)
+                let imageData = bodyImage.pngData()
                 
                 //write to documents folder
                 let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
                 let documentsPath = paths[0]
-                let savePath = (documentsPath as NSString).appendingPathComponent("\(self.currentFriend).png")
+                let savePath = (documentsPath as NSString).appendingPathComponent("\(self.currentFriend ?? "").png")
                 try? imageData?.write(to: URL(fileURLWithPath: savePath), options: [.atomic])
                 
                 //send notification to Friends view
@@ -280,14 +280,14 @@ class BodyViewController : UIViewController {
         //show warning alert
         let warning = UIAlertController(title: "Reset Friend", message: "This cannot be undone.", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Nevermind", style: .default, handler: nil)
-        let resetAction = UIAlertAction(title: "Reset", style: UIAlertActionStyle.destructive, handler: { alert in
+        let resetAction = UIAlertAction(title: "Reset", style: .destructive, handler: { alert in
             
             //perform reset
             for (className, _) in self.imageMap {
                 self.setImageInView(className, toFeature: nil)
                 
-                UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.allowUserInteraction, animations: {
-                        sender.transform = sender.transform.rotated(by: CGFloat(M_PI))
+                UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: .allowUserInteraction, animations: {
+                        sender.transform = sender.transform.rotated(by: .pi)
                     }, completion: nil)
             }
             
@@ -357,12 +357,12 @@ class BodyViewController : UIViewController {
         //no access granted
         if auth == PHAuthorizationStatus.denied {
             //create an alert to send the user to settings
-            let alert = UIAlertController(title: "Error", message: "You denied access to the camera roll.", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Error", message: "You denied access to the camera roll.", preferredStyle: .alert)
             
-            let okAction = UIAlertAction(title: "Nevermind", style: UIAlertActionStyle.destructive, handler: nil)
+            let okAction = UIAlertAction(title: "Nevermind", style: .destructive, handler: nil)
             let fixAction = UIAlertAction(title: "Fix it!", style: .default, handler: { action in
 
-                UIApplication.shared.openURL(URL(string:UIApplicationOpenSettingsURLString)!)
+                UIApplication.shared.openURL(URL(string:UIApplication.openSettingsURLString)!)
                 //hopefully they granted permission. otherwise we're gonna have problems.
                 self.auth = PHAuthorizationStatus.authorized
                 
@@ -394,7 +394,7 @@ class BodyViewController : UIViewController {
             let okAction = UIAlertAction(title: "ok", style: .default, handler: nil)
             alert.addAction(okAction)
 
-            self.present(alert, animated: true, completion: { success in
+            self.present(alert, animated: true, completion: {
                 let accessoryFrame = content.view.frame
                 imageView.frame = CGRect(x: -1.0, y: -5.0, width: accessoryFrame.width, height: accessoryFrame.height * 2.0)
                 UIView.animate(withDuration: 0.3, animations: {
@@ -521,9 +521,8 @@ class CategoryCollectionDelegate : NSObject, UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
-        let collectionWidth = collectionView.frame.width
-        //three items per row with 0px padding
-        let width = (collectionWidth - 2.0) / CGFloat(3.0)
+        let collectionWidth = collectionView.frame.width - collectionView.contentInset.left - collectionView.contentInset.right
+        let width = (collectionWidth - 3.0) / CGFloat(4.0)
         return CGSize(width: width, height: width)
     }
     

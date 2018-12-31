@@ -18,11 +18,11 @@ func delay(_ delay: Double, closure: @escaping ()->()) {
 }
 
 ///play a CATransition for a UIView
-func playTransitionForView(_ view: UIView, duration: Double, transition transitionName: String, subtype: String? = nil, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)) {
+func playTransitionForView(_ view: UIView, duration: Double, transition transitionName: String, subtype: String? = nil, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: .linear)) {
     let transition = CATransition()
     transition.duration = duration
-    transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-    transition.type = transitionName
+    transition.timingFunction = CAMediaTimingFunction(name: .easeOut)
+    transition.type = convertToCATransitionType(transitionName)
     
     //run fix for transition subtype
     //subtypes don't take device orientation into account
@@ -34,7 +34,7 @@ func playTransitionForView(_ view: UIView, duration: Double, transition transiti
     //else if subtype == kCATransitionFromBottom { subtype = kCATransitionFromTop }
     //}
     
-    transition.subtype = subtype
+    transition.subtype = convertToOptionalCATransitionSubtype(subtype)
     transition.timingFunction = timingFunction
     view.layer.add(transition, forKey: nil)
 }
@@ -129,7 +129,7 @@ func async(_ closure: @escaping () -> ()) {
 
 ///open to this app's iOS Settings
 func openSettings() {
-    UIApplication.shared.openURL(URL(string:UIApplicationOpenSettingsURLString)!)
+    UIApplication.shared.openURL(URL(string:UIApplication.openSettingsURLString)!)
 }
 
 
@@ -181,7 +181,7 @@ func csvToArray(_ url: URL) -> [String] {
 func heightForText(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
     let context = NSStringDrawingContext()
     let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-    let rect = text.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: context)
+    let rect = text.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font) : font]), context: context)
     return rect.height
 }
 
@@ -190,7 +190,7 @@ func attributedStringWithHighlightedLinks(_ string: String, linkColor: UIColor) 
     
     let attributed = NSMutableAttributedString(string: string)
     for (_, linkRange) in linksInText(string) {
-        attributed.addAttribute(NSForegroundColorAttributeName, value: linkColor, range: linkRange)
+        attributed.addAttribute(NSAttributedString.Key.foregroundColor, value: linkColor, range: linkRange)
     }
     
     return attributed
@@ -226,7 +226,7 @@ func linksInText(_ string: String) -> [(text: String, range: NSRange)] {
             let linkRange = NSMakeRange(wordStart, wordEnd - wordStart)
             let link = text.substring(with: linkRange)
             text = text.replacingCharacters(in: linkRange, with: link.uppercased()) as NSString
-            links.append(text: link, range: linkRange)
+            links.append((text: link, range: linkRange))
         }
     }
     
@@ -328,9 +328,9 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
         
         unhighlightAllCells()
         
-        let subtype = isBack ? kCATransitionFromLeft : kCATransitionFromRight
+        let subtype = isBack ? convertFromCATransitionSubtype(CATransitionSubtype.fromLeft) : convertFromCATransitionSubtype(CATransitionSubtype.fromRight)
         let timingFunction = CAMediaTimingFunction(controlPoints: 0.215, 0.61, 0.355, 1)
-        playTransitionForView(tableView, duration: 0.4, transition: kCATransitionPush, subtype: subtype, timingFunction: timingFunction)
+        playTransitionForView(tableView, duration: 0.4, transition: convertFromCATransitionType(CATransitionType.push), subtype: subtype, timingFunction: timingFunction)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -344,7 +344,7 @@ class TableViewStackController : UIViewController, UITableViewDelegate, UITableV
         return UITableViewCell()
     }
     
-    func processTouchInTableView(_ touch: CGPoint, state: UIGestureRecognizerState) {
+    func processTouchInTableView(_ touch: CGPoint, state: UIGestureRecognizer.State) {
         for cell in tableView.visibleCells {
             let delegate = tableView.delegate as? StackableTableDelegate
             
@@ -421,25 +421,11 @@ class TransparentTableView : UITableView {
     
 }
 
-//MARK: - Standard Library Extensions
-
-extension Array {
-    ///Returns a copy of the array in random order
-    func shuffled() -> [Element] {
-        var list = self
-        for i in 0..<(list.count - 1) {
-            let j = Int(arc4random_uniform(UInt32(list.count - i))) + i
-            swap(&list[i], &list[j])
-        }
-        return list
-    }
-}
-
 extension Int {
     ///Converts an integer to a standardized three-character string. 1 -> 001. 99 -> 099. 123 -> 123.
     func threeCharacterString() -> String {
         let start = "\(self)"
-        let length = start.characters.count
+        let length = start.count
         if length == 1 { return "00\(start)" }
         else if length == 2 { return "0\(start)" }
         else { return start }
@@ -518,12 +504,12 @@ extension Date {
 extension UITableViewCell {
     //hides the line seperator of the cell
     func hideSeparator() {
-        self.separatorInset = UIEdgeInsetsMake(0, self.frame.size.width * 2.0, 0, 0)
+        self.separatorInset = UIEdgeInsets.init(top: 0, left: self.frame.size.width * 2.0, bottom: 0, right: 0)
     }
     
     //re-enables the line seperator of the cell
     func showSeparator() {
-        self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        self.separatorInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
     }
 }
 
@@ -618,4 +604,36 @@ extension Bundle {
         return "Build Number Not Available"
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCATransitionType(_ input: String) -> CATransitionType {
+	return CATransitionType(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalCATransitionSubtype(_ input: String?) -> CATransitionSubtype? {
+	guard let input = input else { return nil }
+	return CATransitionSubtype(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCATransitionSubtype(_ input: CATransitionSubtype) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCATransitionType(_ input: CATransitionType) -> String {
+	return input.rawValue
 }
